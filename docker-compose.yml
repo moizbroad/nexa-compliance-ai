@@ -1,0 +1,49 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-naxa}
+      POSTGRES_USER: ${POSTGRES_USER:-naxa}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-naxa} -d ${POSTGRES_DB:-naxa}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    profiles: ["containers"]
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-naxa}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-naxa}
+      UPLOAD_DIR: /var/lib/naxa/uploads
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - private_uploads:/var/lib/naxa/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    profiles: ["containers"]
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
+  private_uploads:
+  frontend_node_modules:

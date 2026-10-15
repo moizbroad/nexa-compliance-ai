@@ -33,9 +33,9 @@ These are specification questions, not permission to guess. Record answers in th
 
 ### 1. Create a runnable local application foundation
 
-- [ ] **TP-101 — Add the backend skeleton.** Create the FastAPI app, configuration from environment variables, health endpoint, and backend test setup.
-- [ ] **TP-102 — Add the frontend skeleton.** Create the Next.js/TypeScript app with Tailwind and a minimal upload/review route.
-- [ ] **TP-103 — Add local services.** Add Docker Compose for the app dependencies and PostgreSQL, including a private persistent volume for uploaded files and a separate database volume. Keep secrets out of source control.
+- [x] **TP-101 — Add the backend skeleton.** Create the FastAPI app, configuration from environment variables, health endpoint, and backend test setup.
+- [x] **TP-102 — Add the frontend skeleton.** Create the Next.js/TypeScript app with Tailwind and a minimal upload/review route.
+- [x] **TP-103 — Add local services.** Add Docker Compose for PostgreSQL and separate private named volumes for uploaded files and database data. Keep secrets out of source control. Run the frontend and API locally during development; optional app containers are available with the `containers` profile.
 - [ ] **TP-104 — Add the database foundation.** Configure SQLAlchemy and Alembic, create the first minimal migration after TP-003, and document repeatable migration/startup commands.
 - [ ] **TP-105 — Verify the foundation.** Start the services, call the API health endpoint, load the frontend, connect to PostgreSQL, apply migrations, and run a non-empty backend test.
 
